@@ -1,4 +1,11 @@
+
 @import "tailwindcss";
+body {
+    width:100dvw;
+    overflow-x:hidden;
+    background-color:#dfdff0;
+    font-family:"General Sans",sans-serif;
+}
 @layer base {
     @font-face {
         font-family:'circular-web';
@@ -7,5 +14,17 @@
     @font-face {
         font-family:'general';
         src:url('/fonts/general.woff2') format('woff2');
+    }
+    @font-face {
+        font-family:'robert-medium';
+        src:url('/fonts/robert-medium.woff2') format('woff2');
+    }
+    @font-face {
+        font-family:'robert-regular';
+        src:url('/fonts/robert-regular.woff2') format('woff2');
+    }
+    @font-face {
+        font-family: "zentry";
+        src: url("/fonts/zentry-regular.woff2") format("woff2");
     }
 }

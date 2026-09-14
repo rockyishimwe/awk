@@ -12,7 +12,8 @@ const About = () => {
       scrollTrigger: {
         trigger: "#clip",
         start: "center center",
-        end: "+=800 center",
+        // Viewport-relative so the reveal speed feels consistent on any screen
+        end: "+=150% center",
         scrub: 0.5,
         pin: true,
         pinSpacing: true,
@@ -27,10 +28,11 @@ const About = () => {
   });
 
   return (
-    <div id="about" className="min-h-screen w-screen">
+    <div id="about" className="min-h-screen w-full">
       <div className="relative mb-8 mt-36 flex flex-col items-center gap-5">
-        <p className="font-general text-sm uppercase md:text-[10px]">
-uuu        </p>
+        <p className="font-general text-sm uppercase tracking-widest md:text-[10px]">
+          the story of a hidden realm
+        </p>
 
         <AnimatedTitle
           title="Disc<b>o</b>ver the world's <br /> largest shared <b>a</b>dventure"
@@ -46,7 +48,7 @@ uuu        </p>
         </div>
       </div>
 
-      <div className="h-dvh w-screen" id="clip">
+      <div className="h-dvh w-full" id="clip">
         <div className="mask-clip-path about-image">
           <img
             src="img/about.webp"

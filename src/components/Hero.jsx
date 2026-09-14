@@ -2,7 +2,7 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/all";
 import { TiLocationArrow } from "react-icons/ti";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "./Button";
 import VideoPreview from "./VideoPreview";
 
@@ -12,6 +12,8 @@ const Hero = () => {
   const [currentIndex, setCurrentIndex] = useState(1);
   const [hasClicked, setHasClicked] = useState(false);
   const [loadedVideos, setLoadedVideos] = useState(0);
+  const [mediaFailed, setMediaFailed] = useState(false);
+  const [timedOut, setTimedOut] = useState(false);
 
   const totalVideos = 3;
 
@@ -20,6 +22,13 @@ const Hero = () => {
 
   // Derived state — no useEffect needed
   const loading = loadedVideos < totalVideos - 1;
+
+  // Don't trap users behind the loader forever if media stalls or fails
+  useEffect(() => {
+    if (!loading) return;
+    const timer = setTimeout(() => setTimedOut(true), 8000);
+    return () => clearTimeout(timer);
+  }, [loading]);
 
   const handleVideoLoad = () => {
     setLoadedVideos((prev) => prev + 1);
@@ -88,14 +97,16 @@ const Hero = () => {
     });
   });
 
-  const getVideoSrc = (index) => `videos/hero-${index}.mp4`;
+  const getVideoSrc = (index) => `/videos/hero-${index}.mp4`;
+
+  const showLoader = loading && !timedOut && !mediaFailed;
 
   return (
-    <div className="relative h-dvh w-screen overflow-x-hidden">
+    <div className="relative h-dvh w-full overflow-x-hidden">
 
       {/* Loading screen */}
-      {loading && (
-        <div className="flex-center absolute z-100 h-dvh w-screen overflow-hidden bg-violet-50">
+      {showLoader && (
+        <div className="flex-center absolute z-100 h-dvh w-full overflow-hidden bg-violet-50">
           {/* https://uiverse.io/G4b413l/tidy-walrus-92 */}
 
           <div className="three-body">
@@ -106,10 +117,20 @@ const Hero = () => {
         </div>
       )}
 
+      {/* Media error / timeout notice */}
+      {(mediaFailed || (timedOut && loading)) && (
+        <div className="flex-center absolute z-100 h-dvh w-full overflow-hidden bg-violet-50 px-5 text-center">
+          <p className="max-w-sm font-general text-xs uppercase text-black/70">
+            Some media failed to load. Check your connection and refresh the
+            page.
+          </p>
+        </div>
+      )}
+
       {/* Main video frame */}
       <div
         id="video-frame"
-        className="relative z-10 h-dvh w-screen overflow-hidden rounded-lg bg-blue-75"
+        className="relative z-10 h-dvh w-full overflow-hidden rounded-lg bg-blue-75"
       >
         <div>
 
@@ -128,9 +149,12 @@ const Hero = () => {
                   )}
                   loop
                   muted
+                  playsInline
+                  preload="auto"
                   id="current-video"
                   className="size-64 origin-center scale-150 object-cover object-center"
                   onLoadedData={handleVideoLoad}
+                  onError={() => setMediaFailed(true)}
                 />
               </div>
             </VideoPreview>
@@ -143,9 +167,12 @@ const Hero = () => {
             src={getVideoSrc(currentIndex)}
             loop
             muted
+            playsInline
+            preload="auto"
             id="next-video"
             className="absolute-center invisible absolute z-20 size-64 object-cover object-center"
             onLoadedData={handleVideoLoad}
+            onError={() => setMediaFailed(true)}
           />
 
           {/* Background video */}
@@ -158,8 +185,11 @@ const Hero = () => {
             autoPlay
             loop
             muted
+            playsInline
+            preload="auto"
             className="absolute left-0 top-0 size-full object-cover object-center"
             onLoadedData={handleVideoLoad}
+            onError={() => setMediaFailed(true)}
           />
 
         </div>

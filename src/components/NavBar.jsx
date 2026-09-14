@@ -63,10 +63,14 @@ const NavBar = () => {
   }, [isNavVisible]);
 
   return (
-    <div
-      ref={navContainerRef}
-      className="fixed inset-x-0 top-4 z-50 h-16 border-none transition-all duration-700 sm:inset-x-6"
-    >
+    <>
+      {/* Hidden audio element lives outside the button: media elements are
+          not valid interactive-button children */}
+      <audio ref={audioElementRef} className="hidden" src="/audio/loop.mp3" loop />
+      <div
+        ref={navContainerRef}
+        className="fixed inset-x-0 top-4 z-50 h-16 border-none transition-all duration-700 sm:inset-x-6"
+      >
       <header className="absolute top-1/2 w-full -translate-y-1/2">
         <nav className="flex size-full items-center justify-between p-4">
           {/* Logo and Product button */}
@@ -96,15 +100,14 @@ const NavBar = () => {
             </div>
 
             <button
+              type="button"
               onClick={toggleAudioIndicator}
               className="ml-10 flex items-center space-x-0.5"
+              aria-label={
+                isAudioPlaying ? "Pause background music" : "Play background music"
+              }
+              aria-pressed={isAudioPlaying}
             >
-              <audio
-                ref={audioElementRef}
-                className="hidden"
-                src="/audio/loop.mp3"
-                loop
-              />
               {[1, 2, 3, 4].map((bar) => (
                 <div
                   key={bar}
@@ -120,7 +123,8 @@ const NavBar = () => {
           </div>
         </nav>
       </header>
-    </div>
+      </div>
+    </>
   );
 };
 

@@ -24,6 +24,7 @@ export const VideoPreview = ({ children }) => {
         transformPerspective: 500, // Perspective for realistic 3D effect
         duration: 1,
         ease: "power1.out",
+        overwrite: "auto", // Kill competing tweens on the same properties
       });
 
       // Move the inner content in the opposite direction for a parallax effect
@@ -32,6 +33,7 @@ export const VideoPreview = ({ children }) => {
         y: -yOffset,
         duration: 1,
         ease: "power1.out",
+        overwrite: "auto",
       });
     }
   };
@@ -46,6 +48,7 @@ export const VideoPreview = ({ children }) => {
         rotationX: 0,
         duration: 1,
         ease: "power1.out",
+        overwrite: "auto",
       });
 
       gsap.to(contentRef.current, {
@@ -53,6 +56,7 @@ export const VideoPreview = ({ children }) => {
         y: 0,
         duration: 1,
         ease: "power1.out",
+        overwrite: "auto",
       });
     }
   }, [isHovering]);
